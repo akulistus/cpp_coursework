@@ -10,8 +10,9 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "intercept_usp.hpp"
 #include <stdio.h>
-#include <windows.h>
+#include <iostream>
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
 #include <GLES2/gl2.h>
@@ -126,6 +127,10 @@ int main(int, char**)
         // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
         // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
         glfwPollEvents();
+
+        DetectAndConnectToArduino();
+        const auto& messages = GetArduinoMessages();
+
         if (glfwGetWindowAttrib(window, GLFW_ICONIFIED) != 0)
         {
             ImGui_ImplGlfw_Sleep(10);
@@ -138,7 +143,10 @@ int main(int, char**)
         ImGui::NewFrame();
 
         if(ImGui::Begin("COMMPORT_READER")) {
-
+            ImGui::Text("Messages from Arduino:");
+            for (const auto& message : messages) {
+                ImGui::Text("%s", message.c_str());
+            }
         } ImGui::End();
 
         // Rendering

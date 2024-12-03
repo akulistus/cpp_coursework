@@ -9,10 +9,14 @@ find_package(GLEW REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 
-add_executable(COMMPORT_READER main.cpp)
+add_executable(COMMPORT_READER 
+    main.cpp
+    src/intercept_usb.cpp)
 
 target_link_libraries(COMMPORT_READER 
     PRIVATE 
         imgui::imgui
         glfw
         GLEW::GLEW)
+
+target_include_directories(COMMPORT_READER PRIVATE include)
